@@ -1,5 +1,9 @@
 package com.winter.quiz.service.user;
 
-public interface UserService {
+import com.winter.quiz.entity.User;
 
+public interface UserService {
+    User createUser(User user);
+
+    Boolean hasUserWithEmail(String email);
 }
