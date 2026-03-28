@@ -1,5 +1,7 @@
 package com.winter.quiz.service.user;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,5 +38,14 @@ public class UserServiceImpl implements UserService {
     public User createUser(User user) {
         user.setRole(UserRole.USER);
         return userRepository.save(user);
+    }
+
+    public User login(User user) {
+        Optional<User> optionalUser = userRepository.findByEmail(user.getEmail());
+        if (optionalUser.isPresent() && user.getPassword().equals(optionalUser.get().getPassword())) {
+            return optionalUser.get();
+        }
+
+        return null;
     }
 }
