@@ -22,12 +22,12 @@ public class UserController {
     @PostMapping("/sign-up")
     public ResponseEntity<?> signupUser(@RequestBody User user) {
         if (userService.hasUserWithEmail(user.getEmail())) {
-            return new ResponseEntity<>("User already exists", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>("User already exists", HttpStatus.CONFLICT);
         }
 
         User createdUser = userService.createUser(user);
         if (createdUser == null) {
-            return new ResponseEntity<>("User not created", HttpStatus.NOT_ACCEPTABLE);
+            return new ResponseEntity<>("User not created", HttpStatus.BAD_REQUEST);
         }
 
         return new ResponseEntity<>(createdUser, HttpStatus.OK);
