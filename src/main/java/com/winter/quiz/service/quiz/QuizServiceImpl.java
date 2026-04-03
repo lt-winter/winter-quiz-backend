@@ -1,11 +1,13 @@
 package com.winter.quiz.service.quiz;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import com.winter.quiz.dto.QuizDTO;
 import com.winter.quiz.entity.Quiz;
 import com.winter.quiz.repository.QuizRepository;
 
+@Service
 public class QuizServiceImpl implements QuizService {
     @Autowired
     private QuizRepository quizRepository;
