@@ -1,5 +1,7 @@
 package com.winter.quiz.service.quiz;
 
-public interface QuizService {
+import com.winter.quiz.dto.QuizDTO;
 
+public interface QuizService {
+    QuizDTO createQuiz(QuizDTO dto);
 }

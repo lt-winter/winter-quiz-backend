@@ -1,5 +1,7 @@
 package com.winter.quiz.entity;
 
+import com.winter.quiz.dto.QuizDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -20,4 +22,15 @@ public class Quiz {
 
     // If quiz has no limit time, it has value -1;
     private Long time;
+
+    public QuizDTO getDto() {
+        QuizDTO quizDTO = new QuizDTO();
+
+        quizDTO.setId(id);
+        quizDTO.setTitle(title);
+        quizDTO.setDescription(description);
+        quizDTO.setTime(time);
+
+        return quizDTO;
+    }
 }
