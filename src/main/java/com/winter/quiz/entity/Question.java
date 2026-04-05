@@ -1,5 +1,7 @@
 package com.winter.quiz.entity;
 
+import com.winter.quiz.dto.QuestionDTO;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -30,4 +32,17 @@ public class Question {
     @JoinColumn(name = "quiz_id")
     private Quiz quiz;
 
+    public QuestionDTO getDTO() {
+        QuestionDTO dto = new QuestionDTO();
+
+        dto.setId(id);
+        dto.setQuestionText(questionText);
+        dto.setOptionA(optionA);
+        dto.setOptionB(optionB);
+        dto.setOptionC(optionC);
+        dto.setOptionD(optionD);
+        dto.setCorrectOption(correctOption);
+
+        return dto;
+    }
 }
