@@ -32,7 +32,7 @@ public class QuizServiceImpl implements QuizService {
         return quizRepository.save(quiz).getDto();
     }
 
-    public QuestionDTO addQuestionToQuiz(QuestionDTO dto) {
+    public QuestionDTO addQuestionInQuiz(QuestionDTO dto) {
         Optional<Quiz> optionalQuiz = quizRepository.findById(dto.getId());
 
         if (optionalQuiz.isPresent()) {

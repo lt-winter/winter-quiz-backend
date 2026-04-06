@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.winter.quiz.dto.QuestionDTO;
 import com.winter.quiz.dto.QuizDTO;
 import com.winter.quiz.service.quiz.QuizService;
 
@@ -20,10 +21,19 @@ public class QuizController {
     @Autowired
     private QuizService quizService;
 
-    @PostMapping
+    @PostMapping()
     public ResponseEntity<?> createQuiz(@RequestBody QuizDTO dto) {
         try {
             return new ResponseEntity<>(quizService.createQuiz(dto), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/question")
+    public ResponseEntity<?> addQuestionInQuiz(@RequestBody QuestionDTO dto) {
+        try {
+            return new ResponseEntity<>(quizService.addQuestionInQuiz(dto), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
