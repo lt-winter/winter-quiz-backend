@@ -1,6 +1,8 @@
 package com.winter.quiz.service.quiz;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -50,5 +52,11 @@ public class QuizServiceImpl implements QuizService {
 
         }
         throw new EntityNotFoundException("Quiz not found!");
+    }
+
+    public List<QuizDTO> getAllQuizzes() {
+        return quizRepository.findAll().stream()
+                .peek(quiz -> quiz.setTime(quiz.getQuestions().size() * quiz.getTime())).collect(Collectors.toList())
+                .stream().map(Quiz::getDto).collect(Collectors.toList());
     }
 }
