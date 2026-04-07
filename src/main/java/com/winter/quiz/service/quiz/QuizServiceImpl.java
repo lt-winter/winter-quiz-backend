@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.winter.quiz.dto.QuestionDTO;
 import com.winter.quiz.dto.QuizDTO;
+import com.winter.quiz.dto.QuizDetailsDTO;
 import com.winter.quiz.entity.Question;
 import com.winter.quiz.entity.Quiz;
 import com.winter.quiz.repository.QuestionRepository;
@@ -58,5 +59,20 @@ public class QuizServiceImpl implements QuizService {
         return quizRepository.findAll().stream()
                 .peek(quiz -> quiz.setTime(quiz.getQuestions().size() * quiz.getTime())).collect(Collectors.toList())
                 .stream().map(Quiz::getDto).collect(Collectors.toList());
+    }
+
+    public QuizDetailsDTO getAllQuestionsByQuiz(String quizId) {
+        Optional<Quiz> optionalQuiz = quizRepository.findById(quizId);
+
+        QuizDetailsDTO quizDetailsDTO = new QuizDetailsDTO();
+
+        if (optionalQuiz.isPresent()) {
+            QuizDTO quizDTO = optionalQuiz.get().getDto();
+            quizDTO.setTime(optionalQuiz.get().getTime() * optionalQuiz.get().getQuestions().size());
+            quizDetailsDTO.setQuizDTO(quizDTO);
+            quizDetailsDTO.setQuestions(
+                    optionalQuiz.get().getQuestions().stream().map(Question::getDTO).collect(Collectors.toList()));
+        }
+        return quizDetailsDTO;
     }
 }
