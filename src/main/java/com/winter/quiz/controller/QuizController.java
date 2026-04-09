@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.winter.quiz.dto.QuestionDTO;
 import com.winter.quiz.dto.QuizDTO;
+import com.winter.quiz.dto.SubmitQuizDTO;
 import com.winter.quiz.service.quiz.QuizService;
 
 @RestController
@@ -54,6 +55,15 @@ public class QuizController {
     public ResponseEntity<?> getAllQuestionsByQuiz(@PathVariable String quizId) {
         try {
             return new ResponseEntity<>(quizService.getAllQuestionsByQuiz(quizId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @PostMapping("/submit")
+    public ResponseEntity<?> submitQuiz(@RequestBody SubmitQuizDTO dto) {
+        try {
+            return new ResponseEntity<>(quizService.submitQuiz(dto), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

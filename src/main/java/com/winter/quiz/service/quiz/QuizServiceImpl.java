@@ -1,6 +1,7 @@
 package com.winter.quiz.service.quiz;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -10,10 +11,17 @@ import org.springframework.stereotype.Service;
 import com.winter.quiz.dto.QuestionDTO;
 import com.winter.quiz.dto.QuizDTO;
 import com.winter.quiz.dto.QuizDetailsDTO;
+import com.winter.quiz.dto.QuizResultDTO;
+import com.winter.quiz.dto.SubmitQuizDTO;
+import com.winter.quiz.dto.response.QuestionResponse;
 import com.winter.quiz.entity.Question;
 import com.winter.quiz.entity.Quiz;
+import com.winter.quiz.entity.QuizResult;
+import com.winter.quiz.entity.User;
 import com.winter.quiz.repository.QuestionRepository;
 import com.winter.quiz.repository.QuizRepository;
+import com.winter.quiz.repository.QuizResultRepository;
+import com.winter.quiz.repository.UserRepository;
 
 import jakarta.persistence.EntityNotFoundException;
 
@@ -24,6 +32,12 @@ public class QuizServiceImpl implements QuizService {
 
     @Autowired
     private QuestionRepository questionRepository;
+
+    @Autowired
+    private QuizResultRepository quizResultRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     public QuizDTO createQuiz(QuizDTO dto) {
         Quiz quiz = new Quiz();
@@ -74,5 +88,93 @@ public class QuizServiceImpl implements QuizService {
                     optionalQuiz.get().getQuestions().stream().map(Question::getDTO).collect(Collectors.toList()));
         }
         return quizDetailsDTO;
+    }
+
+    public QuizResultDTO submitQuiz(SubmitQuizDTO request) {
+        Quiz quiz = quizRepository
+                .findById(request.getQuizId()).orElseThrow(() -> new EntityNotFoundException("Quiz not found"));
+
+        User user = userRepository.findById(request.getUserId())
+                .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+        int correctAnswers = 0;
+
+        for (QuestionResponse response : request.getResponses()) {
+            Question question = questionRepository.findById(response.getQuestionId())
+                    .orElseThrow(() -> new EntityNotFoundException("Question not found"));
+
+            if (isCorrectAnswer(question, response.getSelectedOption())) {
+                correctAnswers++;
+            }
+        }
+
+        int totalQuestions = quiz.getQuestions().size();
+        double percentage = ((double) correctAnswers / totalQuestions) * 100;
+
+        QuizResult quizResult = new QuizResult();
+
+        quizResult.setQuiz(quiz);
+        quizResult.setUser(user);
+        quizResult.setTotalQuestions(totalQuestions);
+        quizResult.setCorrectAnswers(correctAnswers);
+        quizResult.setPercentage(percentage);
+
+        return quizResultRepository.save(quizResult).getDto();
+    }
+
+    private boolean isCorrectAnswer(Question question, String selectedOption) {
+        String expected = normalizeOption(question, question.getCorrectOption());
+        String selected = normalizeOption(question, selectedOption);
+
+        return expected != null && expected.equals(selected);
+    }
+
+    private String normalizeOption(Question question, String optionValue) {
+        if (optionValue == null) {
+            return null;
+        }
+
+        String trimmed = optionValue.trim();
+        if (trimmed.isEmpty()) {
+            return null;
+        }
+
+        String compact = trimmed.replace(" ", "").replace("_", "").toUpperCase(Locale.ROOT);
+
+        if (compact.equals("A") || compact.equals("OPTIONA")) {
+            return "A";
+        }
+        if (compact.equals("B") || compact.equals("OPTIONB")) {
+            return "B";
+        }
+        if (compact.equals("C") || compact.equals("OPTIONC")) {
+            return "C";
+        }
+        if (compact.equals("D") || compact.equals("OPTIOND")) {
+            return "D";
+        }
+
+        String normalizedText = canonicalText(trimmed);
+
+        if (question.getOptionA() != null && canonicalText(question.getOptionA()).equals(normalizedText)) {
+            return "A";
+        }
+        if (question.getOptionB() != null && canonicalText(question.getOptionB()).equals(normalizedText)) {
+            return "B";
+        }
+        if (question.getOptionC() != null && canonicalText(question.getOptionC()).equals(normalizedText)) {
+            return "C";
+        }
+        if (question.getOptionD() != null && canonicalText(question.getOptionD()).equals(normalizedText)) {
+            return "D";
+        }
+
+        return trimmed.toUpperCase(Locale.ROOT);
+    }
+
+    private String canonicalText(String value) {
+        return value == null
+                ? ""
+                : value.trim().replaceAll("[^a-zA-Z0-9]", "").toUpperCase(Locale.ROOT);
     }
 }
