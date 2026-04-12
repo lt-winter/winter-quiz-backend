@@ -122,6 +122,15 @@ public class QuizServiceImpl implements QuizService {
         return quizResultRepository.save(quizResult).getDto();
     }
 
+    public List<QuizResultDTO> getAllQuizResults() {
+        return quizResultRepository.findAll().stream().map(QuizResult::getDto).collect(Collectors.toList());
+    }
+
+    public List<QuizResultDTO> getQuizResultsById(String quizId) {
+        return quizResultRepository.findByQuizId(quizId).stream().map(QuizResult::getDto).collect(Collectors.toList());
+    }
+
+    // String formatting method
     private boolean isCorrectAnswer(Question question, String selectedOption) {
         String expected = normalizeOption(question, question.getCorrectOption());
         String selected = normalizeOption(question, selectedOption);

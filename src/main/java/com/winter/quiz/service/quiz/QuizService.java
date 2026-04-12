@@ -18,4 +18,8 @@ public interface QuizService {
     QuizDetailsDTO getAllQuestionsByQuiz(String quizId);
 
     QuizResultDTO submitQuiz(SubmitQuizDTO request);
+
+    List<QuizResultDTO> getAllQuizResults();
+
+    List<QuizResultDTO> getQuizResultsById(String quizId);
 }

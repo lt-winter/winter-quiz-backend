@@ -68,4 +68,23 @@ public class QuizController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
     }
+
+    @GetMapping("/results")
+    public ResponseEntity<?> getAllQuizResult() {
+        try {
+            return new ResponseEntity<>(quizService.getAllQuizResults(), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping("/results/{quizId}")
+    public ResponseEntity<?> getQuizResultsById(@PathVariable String quizId) {
+        try {
+            return new ResponseEntity<>(quizService.getQuizResultsById(quizId), HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+    }
+
 }
