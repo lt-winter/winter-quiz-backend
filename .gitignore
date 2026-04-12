@@ -31,3 +31,6 @@ build/
 
 ### VS Code ###
 .vscode/
+
+# Private architecture planning notes
+FUTURE_EVOLUTION_PLAN.md
