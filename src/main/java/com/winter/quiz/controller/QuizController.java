@@ -81,7 +81,7 @@ public class QuizController {
     @GetMapping("/results/{quizId}")
     public ResponseEntity<?> getQuizResultsById(@PathVariable String quizId) {
         try {
-            return new ResponseEntity<>(quizService.getQuizResultsById(quizId), HttpStatus.OK);
+            return new ResponseEntity<>(quizService.getQuizResultsByQuizId(quizId), HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }

@@ -21,5 +21,7 @@ public interface QuizService {
 
     List<QuizResultDTO> getAllQuizResults();
 
-    List<QuizResultDTO> getQuizResultsById(String quizId);
+    List<QuizResultDTO> getQuizResultsByQuizId(String quizId);
+
+    List<QuizResultDTO> getQuizResultsByUserId(String userId);
 }

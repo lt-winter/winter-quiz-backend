@@ -126,8 +126,12 @@ public class QuizServiceImpl implements QuizService {
         return quizResultRepository.findAll().stream().map(QuizResult::getDto).collect(Collectors.toList());
     }
 
-    public List<QuizResultDTO> getQuizResultsById(String quizId) {
+    public List<QuizResultDTO> getQuizResultsByQuizId(String quizId) {
         return quizResultRepository.findByQuizId(quizId).stream().map(QuizResult::getDto).collect(Collectors.toList());
+    }
+
+    public List<QuizResultDTO> getQuizResultsByUserId(String userId) {
+        return quizResultRepository.findByUserId(userId).stream().map(QuizResult::getDto).collect(Collectors.toList());
     }
 
     // String formatting method

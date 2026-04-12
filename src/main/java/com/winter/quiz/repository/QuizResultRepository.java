@@ -9,6 +9,8 @@ import com.winter.quiz.entity.QuizResult;
 
 @Repository
 public interface QuizResultRepository extends JpaRepository<QuizResult, String> {
-	List<QuizResult> findByQuizId(String quizId);
+    List<QuizResult> findByQuizId(String quizId);
+
+    List<QuizResult> findByUserId(String userId);
 
 }
